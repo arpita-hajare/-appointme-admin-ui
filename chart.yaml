@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+   app: {{- include "values.service.labels" . | nindent 4 }}
+   name: {{ template "adminui" . }}
+spec:
+ type: {{ .Values.service.type }} 
+ ports:
+  - name: http
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.targetport }}
+    selector: {{- include "values.matchLabels" . | nindent 4 }}
+---   
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: {{ template "adminui" . }}    
+    labels: 
+     app: {{- include "values.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{- include "values.matchLabels" . | nindent 6 }}
+  template:
+    metadata: 
+    Labels: 
+     app: {{- include "values.matchLabels" . | nindent 6 }}
+  spec:
+   containers:
+    name: {{ .Chart.Name }}
+    image: {{ template "image" . }}   
+    imagePullPolicy: {{ .Values.image.pullPolicy}}
+   ports: 
+    - containerPort: {{ .Values.service.port }}
