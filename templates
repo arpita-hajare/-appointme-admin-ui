@@ -1,6 +1,0 @@
-{{- define "template"}}
-  labels:
-    name: {{ .Values.labels.app}}
-  spec:
-    image: "deekshithsn/adminui" 
-{{- end -}}
